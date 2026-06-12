@@ -273,10 +273,13 @@ body {
 
 /* ── VIEWPORT — always full screen ── */
 #viewport {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   background: #000;
   overflow: hidden;
+  /* height set by JS in applyLayout() so it can extend behind floating toolbars */
 }
 
 #garden {
@@ -359,10 +362,6 @@ body[data-pos-v="center"] #ui { top: 50%;    bottom: auto; }
 /* PWA standalone — safe area covers home indicator only */
 body[data-pos-v="bottom"] #ui { top: auto;   bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
 
-/* Safari iOS browser — small gap above the bottom toolbar (~56px above home indicator) */
-body[data-display-mode="safari"][data-pos-v="bottom"] #ui { bottom: 90px; }
-/* Chrome iOS browser — more room above the taller Chrome toolbar */
-body[data-display-mode="chrome"][data-pos-v="bottom"] #ui { bottom: 150px; }
 
 body[data-pos-h="center"][data-pos-v="center"] #ui { transform: translate(-50%, -50%); }
 body[data-pos-h="center"]:not([data-pos-v="center"]) #ui { transform: translateX(-50%); }
@@ -804,11 +803,10 @@ const viewportEl   = document.getElementById('viewport');
 
 const VW = () => viewportEl.clientWidth;
 const VH = () => {
-  if (document.body.dataset.displayMode === 'safari') {
-    // Safari's clientHeight stops at the toolbar boundary; add ~35px so flowers
-    // tuck visually under/behind the translucent toolbar without going off-screen.
-    return viewportEl.clientHeight + 70;
-  }
+  const mode = document.body.dataset.displayMode;
+  // Safari and PWA toolbars float over content; flowers may use the full screen.
+  // Chrome's bottom bar reserves space; canvas stays within clientHeight.
+  if (mode === 'safari' || mode === 'standalone') return window.screen.height;
   return viewportEl.clientHeight;
 };
 
@@ -1290,12 +1288,35 @@ function applyLayout() {
   document.body.dataset.posH = condensed ? 'center' : 'right';
   document.body.dataset.posV = 'bottom';
 
+  const isMobileIOS  = /iPhone|iPad|iPod/.test(navigator.userAgent);
   const isStandalone = window.navigator.standalone === true ||
                        window.matchMedia('(display-mode: standalone)').matches;
   const isChromeIOS  = /CriOS/i.test(navigator.userAgent);
-  document.body.dataset.displayMode = isStandalone ? 'standalone'
-                                    : isChromeIOS  ? 'chrome'
-                                    : 'safari';
+  const mode = isStandalone ? 'standalone'
+             : isChromeIOS  ? 'chrome'
+             : isMobileIOS  ? 'safari'
+             : 'desktop';
+  document.body.dataset.displayMode = mode;
+
+  // Capture clientHeight before we resize the canvas element
+  const clientH = viewportEl.clientHeight;
+
+  // Size the flower canvas to VH() — for safari/standalone this is screen.height,
+  // for chrome/desktop it stays at clientHeight
+  viewportEl.style.height = VH() + 'px';
+
+  // Position the #ui panel via inline style (overrides CSS for mobile modes)
+  const uiEl = document.getElementById('ui');
+  if (mode === 'chrome') {
+    uiEl.style.bottom = '32px';
+  } else if (mode === 'safari') {
+    // screen.height - clientH is the height of the floating toolbar region;
+    // add 32px of breathing room above it
+    uiEl.style.bottom = (32 + window.screen.height - clientH) + 'px';
+  } else if (mode === 'standalone') {
+    uiEl.style.bottom = 'calc(32px + env(safe-area-inset-bottom, 0px))';
+  }
+  // 'desktop' leaves bottom unset so the CSS fallback rule applies
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
