@@ -803,7 +803,14 @@ const btnReset     = document.getElementById('btnReset');
 const viewportEl   = document.getElementById('viewport');
 
 const VW = () => viewportEl.clientWidth;
-const VH = () => viewportEl.clientHeight;
+const VH = () => {
+  if (document.body.dataset.displayMode === 'safari') {
+    // Safari's clientHeight stops at the toolbar boundary; add ~35px so flowers
+    // tuck visually under/behind the translucent toolbar without going off-screen.
+    return viewportEl.clientHeight + 35;
+  }
+  return viewportEl.clientHeight;
+};
 
 // ── WAKE LOCK — keep screen on while timer runs ───────────────────────────
 async function acquireWakeLock() {
