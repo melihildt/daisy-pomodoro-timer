@@ -1294,7 +1294,6 @@ function applyLayout() {
 // ── INIT ─────────────────────────────────────────────────────────────────────
 function setup() {
   applyLayout();
-  initHeightmap();
   clockEl.textContent = formatTime(TOTAL);
   setPlayPauseIcon('play');
   labelEl.textContent = 'Ready';
@@ -1303,6 +1302,11 @@ function setup() {
     applyLayout();
     initHeightmap();
   });
+
+  // Delay the initial heightmap build until the browser chrome has settled.
+  // A single rAF is not enough on iOS — the toolbar finishes adjusting a few
+  // frames later, so we nest a short setTimeout inside rAF.
+  requestAnimationFrame(() => setTimeout(initHeightmap, 100));
 }
 
 setup();
