@@ -277,9 +277,10 @@ body {
   top: 0;
   left: 0;
   right: 0;
+  height: 100vh;   /* fallback */
+  height: 100dvh;  /* dynamic viewport — overridden by JS once layout settles */
   background: #000;
   overflow: hidden;
-  /* height set by JS in applyLayout() so it can extend behind floating toolbars */
 }
 
 #garden {
@@ -1317,6 +1318,9 @@ function applyLayout() {
     uiEl.style.bottom = 'calc(32px + env(safe-area-inset-bottom, 0px))';
   }
   // 'desktop' leaves bottom unset so the CSS fallback rule applies
+  // TEMP DEBUG
+  console.log('[applyLayout] mode=%s clientH=%d screen.h=%d viewportH-after=%d ui.bottom=%s',
+    mode, clientH, window.screen.height, viewportEl.clientHeight, uiEl.style.bottom);
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
