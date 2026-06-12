@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"/Users/melisahildt/Downloads/Pomodoro Timer \\(12\\).html\" \"/Users/melisahildt/Downloads/Claude Apps/pomodoro-timer/index.html\")"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Pomodoro — Daisy Field",
+  "short_name": "Daisy Field",
+  "description": "A Pomodoro timer with a growing flower garden.",
+  "display": "standalone",
+  "orientation": "any",
+  "start_url": "/",
+  "scope": "/",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
