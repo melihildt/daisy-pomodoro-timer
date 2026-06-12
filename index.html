@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daisy Field">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<title>Pomodoro — Daisy Field</title>
+<style>
+/* =====================================================================
+   iOS 26 Liquid Glass — Colors & Type (inlined)
+   ===================================================================== */
+
+:root {
+  --font-sans:    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+  --font-rounded: ui-rounded, -apple-system, "SF Pro Rounded", "SF Compact Rounded", "Inter", system-ui, sans-serif;
+  --font-serif:   ui-serif, "New York", "IBM Plex Serif", Georgia, serif;
+  --font-mono:    ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Monaco, "Cascadia Mono", monospace;
+
+  /* Type scale (iOS HIG) */
+  --text-large-title:    34px;  --lh-large-title:    41px;  --tr-large-title:    0.37px;
+  --text-title-1:        28px;  --lh-title-1:        34px;  --tr-title-1:        0.36px;
+  --text-title-2:        22px;  --lh-title-2:        28px;  --tr-title-2:        0.35px;
+  --text-title-3:        20px;  --lh-title-3:        25px;  --tr-title-3:        0.38px;
+  --text-headline:       17px;  --lh-headline:       22px;  --tr-headline:      -0.43px;
+  --text-body:           17px;  --lh-body:           22px;  --tr-body:          -0.43px;
+  --text-callout:        16px;  --lh-callout:        21px;  --tr-callout:       -0.32px;
+  --text-subhead:        15px;  --lh-subhead:        20px;  --tr-subhead:       -0.23px;
+  --text-footnote:       13px;  --lh-footnote:       18px;  --tr-footnote:      -0.08px;
+  --text-caption-1:      12px;  --lh-caption-1:      16px;  --tr-caption-1:      0px;
+  --text-caption-2:      11px;  --lh-caption-2:      13px;  --tr-caption-2:      0.07px;
+
+  /* Weights */
+  --weight-ultralight: 100;
+  --weight-thin:       200;
+  --weight-light:      300;
+  --weight-regular:    400;
+  --weight-medium:     500;
+  --weight-semibold:   600;
+  --weight-bold:       700;
+  --weight-heavy:      800;
+  --weight-black:      900;
+
+  /* System colors — iOS 26 (light) */
+  --blue:    #007AFF;
+  --green:   #34C759;
+  --indigo:  #5856D6;
+  --orange:  #FF9500;
+  --pink:    #FF2D55;
+  --purple:  #AF52DE;
+  --red:     #FF3B30;
+  --teal:    #30B0C7;
+  --yellow:  #FFCC00;
+  --mint:    #00C7BE;
+  --cyan:    #32ADE6;
+  --brown:   #A2845E;
+
+  /* Grayscale */
+  --gray:    #8E8E93;
+  --gray-2:  #AEAEB2;
+  --gray-3:  #C7C7CC;
+  --gray-4:  #D1D1D6;
+  --gray-5:  #E5E5EA;
+  --gray-6:  #F2F2F7;
+
+  /* Label / fill / background semantics */
+  --label-primary:        rgba(0, 0, 0, 1);
+  --label-secondary:      rgba(60, 60, 67, 0.60);
+  --label-tertiary:       rgba(60, 60, 67, 0.30);
+  --label-quaternary:     rgba(60, 60, 67, 0.18);
+
+  --fill-primary:         rgba(120, 120, 128, 0.20);
+  --fill-secondary:       rgba(120, 120, 128, 0.16);
+  --fill-tertiary:        rgba(118, 118, 128, 0.12);
+  --fill-quaternary:      rgba(116, 116, 128, 0.08);
+
+  --bg-primary:           #FFFFFF;
+  --bg-secondary:         #F2F2F7;
+  --bg-tertiary:          #FFFFFF;
+  --bg-grouped-primary:   #F2F2F7;
+  --bg-grouped-secondary: #FFFFFF;
+  --bg-grouped-tertiary:  #F2F2F7;
+
+  --separator:            rgba(60, 60, 67, 0.29);
+  --separator-opaque:     #C6C6C8;
+
+  /* Liquid Glass tokens */
+  --glass-blur-regular:      saturate(180%) blur(20px);
+  --glass-blur-thick:        saturate(180%) blur(40px);
+  --glass-blur-thin:         saturate(180%) blur(10px);
+
+  --glass-fill-regular:      rgba(255, 255, 255, 0.55);
+  --glass-fill-clear:        rgba(255, 255, 255, 0.18);
+  --glass-fill-prominent:    rgba(255, 255, 255, 0.85);
+
+  --glass-edge:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.18),
+    inset 1px 0 0 0 rgba(255, 255, 255, 0.22),
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.22);
+
+  --glass-shadow-sm: 0 1px 2px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.08);
+  --glass-shadow-md: 0 2px 6px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.12);
+  --glass-shadow-lg: 0 4px 12px rgba(0,0,0,0.10), 0 16px 48px rgba(0,0,0,0.18);
+
+  /* Radii */
+  --radius-xs:  6px;
+  --radius-sm:  10px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --radius-xl:  28px;
+  --radius-2xl: 38px;
+  --radius-capsule: 999px;
+
+  /* Spacing — iOS 8pt grid */
+  --space-0:  0;
+  --space-1:  2px;
+  --space-2:  4px;
+  --space-3:  8px;
+  --space-4:  12px;
+  --space-5:  16px;
+  --space-6:  20px;
+  --space-7:  24px;
+  --space-8:  32px;
+  --space-9:  44px;
+  --space-10: 56px;
+  --space-11: 72px;
+
+  /* Elevation */
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-2: 0 2px 6px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-3: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06);
+
+  /* Motion */
+  --ease-standard:  cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-snappy:    cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-decel:     cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-accel:     cubic-bezier(0.4, 0.0, 1, 1);
+
+  --dur-fast:   120ms;
+  --dur-base:   240ms;
+  --dur-slow:   420ms;
+  --dur-morph:  600ms;
+
+  /* Tap state tokens */
+  --press-scale:  0.96;
+  --hover-alpha:  0.92;
+  --press-alpha:  0.85;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --blue:    #0A84FF;
+    --green:   #30D158;
+    --indigo:  #5E5CE6;
+    --orange:  #FF9F0A;
+    --pink:    #FF375F;
+    --purple:  #BF5AF2;
+    --red:     #FF453A;
+    --teal:    #40C8E0;
+    --yellow:  #FFD60A;
+    --mint:    #66D4CF;
+    --cyan:    #64D2FF;
+    --brown:   #AC8E68;
+
+    --gray:    #8E8E93;
+    --gray-2:  #636366;
+    --gray-3:  #48484A;
+    --gray-4:  #3A3A3C;
+    --gray-5:  #2C2C2E;
+    --gray-6:  #1C1C1E;
+
+    --label-primary:    rgba(255, 255, 255, 1);
+    --label-secondary:  rgba(235, 235, 245, 0.60);
+    --label-tertiary:   rgba(235, 235, 245, 0.30);
+    --label-quaternary: rgba(235, 235, 245, 0.16);
+
+    --fill-primary:     rgba(120, 120, 128, 0.36);
+    --fill-secondary:   rgba(120, 120, 128, 0.32);
+    --fill-tertiary:    rgba(118, 118, 128, 0.24);
+    --fill-quaternary:  rgba(118, 118, 128, 0.18);
+
+    --bg-primary:           #000000;
+    --bg-secondary:         #1C1C1E;
+    --bg-tertiary:          #2C2C2E;
+    --bg-grouped-primary:   #000000;
+    --bg-grouped-secondary: #1C1C1E;
+    --bg-grouped-tertiary:  #2C2C2E;
+
+    --separator:        rgba(84, 84, 88, 0.65);
+    --separator-opaque: #38383A;
+
+    --glass-fill-regular:   rgba(40, 40, 50, 0.55);
+    --glass-fill-clear:     rgba(40, 40, 50, 0.22);
+    --glass-fill-prominent: rgba(28, 28, 30, 0.82);
+
+    --glass-edge:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+      inset 0 -1px 0 0 rgba(0, 0, 0, 0.30),
+      inset 1px 0 0 0 rgba(255, 255, 255, 0.06),
+      inset -1px 0 0 0 rgba(255, 255, 255, 0.06);
+
+    --glass-shadow-sm: 0 1px 2px rgba(0,0,0,0.30), 0 2px 8px rgba(0,0,0,0.35);
+    --glass-shadow-md: 0 2px 6px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.45);
+    --glass-shadow-lg: 0 4px 12px rgba(0,0,0,0.40), 0 16px 48px rgba(0,0,0,0.60);
+  }
+}
+
+/* Liquid Glass utility classes */
+.glass,
+.glass--regular {
+  position: relative;
+  background: var(--glass-fill-regular);
+  -webkit-backdrop-filter: var(--glass-blur-regular);
+  backdrop-filter: var(--glass-blur-regular);
+  box-shadow: var(--glass-edge), var(--glass-shadow-md);
+  border-radius: var(--radius-capsule);
+  color: var(--label-primary);
+  transition:
+    background var(--dur-base) var(--ease-standard),
+    transform   var(--dur-fast) var(--ease-snappy),
+    box-shadow  var(--dur-base) var(--ease-standard);
+}
+.glass--clear {
+  background: var(--glass-fill-clear);
+  -webkit-backdrop-filter: var(--glass-blur-thick);
+  backdrop-filter: var(--glass-blur-thick);
+}
+.glass--prominent {
+  background: var(--glass-fill-prominent);
+  box-shadow: var(--glass-edge), var(--glass-shadow-lg);
+}
+.glass--rect    { border-radius: var(--radius-xl); }
+.glass--capsule { border-radius: var(--radius-capsule); }
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass, .glass--regular, .glass--clear, .glass--prominent {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--bg-tertiary);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+}
+
+/* =====================================================================
+   APP STYLES
+   ===================================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0a0a0b;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  color: var(--label-primary);
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── VIEWPORT — always full screen ── */
+#viewport {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  overflow: hidden;
+}
+
+#garden {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.flower {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  transform-origin: center center;
+  will-change: transform;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.flower.gone {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.petal-wrap {
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 85%;
+}
+
+@keyframes flowerShake {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(-6deg) scale(1.04); }
+  50%  { transform: rotate(5deg)  scale(1.02); }
+  75%  { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.petal-wrap.shaking {
+  animation: flowerShake 0.55s ease-in-out infinite alternate;
+}
+
+/* ── UI PANEL — iOS 26 Liquid Glass ── */
+#ui {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-6);
+  user-select: none;
+  min-width: 320px;
+
+  background: rgba(28, 28, 30, 0.62);
+  -webkit-backdrop-filter: var(--glass-blur-regular);
+  backdrop-filter: var(--glass-blur-regular);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 0 rgba(0,0,0,0.30),
+    inset 1px 0 0 0 rgba(255,255,255,0.05),
+    inset -1px 0 0 0 rgba(255,255,255,0.05),
+    var(--glass-shadow-lg);
+  border-radius: var(--radius-xl);
+  padding: var(--space-7) var(--space-7) var(--space-6);
+  transition:
+    left  var(--dur-base) var(--ease-standard),
+    right var(--dur-base) var(--ease-standard),
+    top   var(--dur-base) var(--ease-standard),
+    bottom var(--dur-base) var(--ease-standard),
+    padding var(--dur-base) var(--ease-standard),
+    min-width var(--dur-base) var(--ease-standard);
+}
+
+/* ── POSITION — driven by body data attrs ── */
+body[data-pos-h="left"]   #ui { left: 24px;  right: auto; }
+body[data-pos-h="center"] #ui { left: 50%;   right: auto; }
+body[data-pos-h="right"]  #ui { left: auto;  right: 24px; }
+body[data-pos-v="top"]    #ui { top: 24px;   bottom: auto; }
+body[data-pos-v="center"] #ui { top: 50%;    bottom: auto; }
+/* PWA standalone — safe area covers home indicator only */
+body[data-pos-v="bottom"] #ui { top: auto;   bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+
+/* Safari iOS browser — small gap above the bottom toolbar (~56px above home indicator) */
+body[data-display-mode="safari"][data-pos-v="bottom"] #ui { bottom: 90px; }
+/* Chrome iOS browser — more room above the taller Chrome toolbar */
+body[data-display-mode="chrome"][data-pos-v="bottom"] #ui { bottom: 150px; }
+
+body[data-pos-h="center"][data-pos-v="center"] #ui { transform: translate(-50%, -50%); }
+body[data-pos-h="center"]:not([data-pos-v="center"]) #ui { transform: translateX(-50%); }
+body[data-pos-v="center"]:not([data-pos-h="center"]) #ui { transform: translateY(-50%); }
+
+/* ── CONDENSED — applied on mobile viewports ── */
+body.condensed #ui {
+  min-width: 0;
+  width: calc(100% - 24px);
+  max-width: 440px;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+body.condensed .ui-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+body.condensed .ui-col-left {
+  flex: 1;
+  min-width: 0;
+  align-items: flex-start;
+}
+body.condensed .ui-col-right {
+  flex: 0 0 auto;
+  align-items: stretch;
+  gap: 8px;
+}
+body.condensed #header {
+  gap: 6px;
+}
+body.condensed #clock {
+  font-size: 64px;
+  line-height: 0.9;
+  margin: 0;
+  letter-spacing: -0.04em;
+  text-align: left;
+}
+body.condensed #ctrls {
+  justify-content: flex-end;
+  gap: 6px;
+}
+body.condensed #duration-btns {
+  align-self: stretch;
+}
+
+/* Trigger pill — visible in condensed mode */
+body.condensed .duration-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: rgba(235,235,245,0.92);
+  font-family: var(--font-sans);
+  font-size: var(--text-footnote);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tr-footnote);
+  padding: 7px 12px;
+  border-radius: var(--radius-capsule);
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-snappy);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 0 rgba(0,0,0,0.12);
+}
+body.condensed .duration-trigger:hover { background: rgba(255,255,255,0.14); }
+body.condensed .duration-trigger:active { transform: scale(var(--press-scale)); }
+body.condensed .duration-trigger-chev {
+  width: 10px; height: 10px;
+  opacity: 0.7;
+  transition: transform var(--dur-base) var(--ease-standard);
+  flex: none;
+}
+body.condensed #duration-btns.open .duration-trigger-chev { transform: rotate(180deg); }
+
+/* Condensed: segs collapse into popover */
+body.condensed .duration-options {
+  display: none;
+  padding: 6px;
+}
+body.condensed #duration-btns.open .duration-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: rgba(58, 58, 60, 0.92);
+  -webkit-backdrop-filter: var(--glass-blur-regular);
+  backdrop-filter: var(--glass-blur-regular);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.14),
+    var(--glass-shadow-md);
+  border-radius: var(--radius-md);
+  z-index: 20;
+  animation: popIn 0.18s var(--ease-spring);
+}
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(4px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+body.condensed #duration-btns.open .seg {
+  display: block;
+  width: 100%;
+  background: transparent;
+  box-shadow: none;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  font-size: var(--text-footnote);
+}
+body.condensed #duration-btns.open .seg:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+body.condensed #duration-btns.open .seg.active {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  box-shadow: none;
+}
+
+body.condensed #btnPlayPause {
+  width: 44px;
+  height: 44px;
+}
+body.condensed #btnPlayPause svg { width: 16px; height: 16px; }
+body.condensed #btnReset {
+  flex: none;
+  padding: 10px 16px;
+  font-size: var(--text-subhead);
+}
+
+/* Column wrappers — no-op in laptop mode */
+.ui-col { display: contents; }
+
+/* ── HEADER ── */
+#header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+#status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--label-tertiary);
+  transition: background var(--dur-base) var(--ease-standard),
+              box-shadow var(--dur-base) var(--ease-standard);
+}
+#status-dot.running {
+  background: var(--green);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--green) 60%, transparent);
+}
+#status-dot.done {
+  background: var(--yellow);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--yellow) 60%, transparent);
+}
+
+#label {
+  font-size: var(--text-footnote);
+  line-height: var(--lh-footnote);
+  font-weight: var(--weight-semibold);
+  color: rgba(235, 235, 245, 0.60);
+  letter-spacing: 0.01em;
+}
+
+/* ── CLOCK ── */
+#clock {
+  font-family: var(--font-rounded);
+  font-size: 84px;
+  font-weight: var(--weight-thin);
+  color: #fff;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 0.95;
+  margin: var(--space-2) 0 var(--space-1);
+  text-align: center;
+}
+
+/* ── SEGMENTED DURATION PICKER ── */
+#duration-btns {
+  position: relative;
+}
+.duration-trigger { display: none; }
+
+.duration-options {
+  display: flex;
+  padding: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-capsule);
+  box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.05);
+}
+
+.seg {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: rgba(235, 235, 245, 0.55);
+  font-family: var(--font-sans);
+  font-size: var(--text-subhead);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tr-subhead);
+  padding: 7px 0;
+  border-radius: var(--radius-capsule);
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease-standard),
+    color var(--dur-base) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-snappy);
+  font-variant-numeric: tabular-nums;
+}
+.seg:hover:not(.active):not(:disabled) {
+  color: rgba(255,255,255,0.85);
+}
+.seg.active {
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 0 rgba(0,0,0,0.18),
+    0 1px 2px rgba(0,0,0,0.30);
+}
+.seg:active:not(:disabled) { transform: scale(var(--press-scale)); }
+.seg:disabled { opacity: 0.4; cursor: default; }
+
+/* ── CONTROL ROW ── */
+#ctrls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Primary play/pause button */
+#btnPlayPause {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #000;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.95),
+    inset 0 -1px 0 0 rgba(0,0,0,0.08),
+    0 2px 8px rgba(0,0,0,0.30),
+    0 8px 24px rgba(0,0,0,0.25);
+  transition:
+    transform var(--dur-fast) var(--ease-snappy),
+    background var(--dur-base) var(--ease-standard);
+}
+#btnPlayPause:hover:not(:disabled) {
+  background: #f5f5f7;
+}
+#btnPlayPause:active:not(:disabled) {
+  transform: scale(var(--press-scale));
+}
+#btnPlayPause:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+#btnPlayPause svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+#btnPlayPause .icon-play { margin-left: 2px; }
+
+/* Secondary reset pill */
+#btnReset {
+  flex: 1;
+  background: rgba(255,255,255,0.10);
+  border: none;
+  color: rgba(255,255,255,0.92);
+  font-family: var(--font-sans);
+  font-size: var(--text-callout);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tr-callout);
+  padding: 14px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.14),
+    inset 0 -1px 0 0 rgba(0,0,0,0.18);
+  transition:
+    background var(--dur-base) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-snappy);
+}
+#btnReset:hover {
+  background: rgba(255,255,255,0.16);
+}
+#btnReset:active {
+  transform: scale(var(--press-scale));
+  background: rgba(255,255,255,0.20);
+}
+
+
+</style>
+</head>
+<body>
+
+<div id="viewport">
+  <div id="garden"></div>
+
+  <div id="ui">
+    <div class="ui-col ui-col-left">
+      <div id="header">
+        <div id="status-dot"></div>
+        <div id="label">Focus</div>
+      </div>
+      <div id="clock">01:00</div>
+    </div>
+    <div class="ui-col ui-col-right">
+      <div id="ctrls">
+        <button id="btnPlayPause" aria-label="Start">
+          <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15c0 .9 1 1.4 1.7.9l12-7.5c.7-.4.7-1.4 0-1.8l-12-7.5C8 3.1 7 3.6 7 4.5z"/></svg>
+        </button>
+        <button id="btnReset">Reset</button>
+      </div>
+      <div id="duration-btns">
+        <button class="duration-trigger" type="button" aria-label="Change duration" aria-haspopup="true" aria-expanded="false">
+          <span class="duration-trigger-label">1 min</span>
+          <svg class="duration-trigger-chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5l3.5 3.5 3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="duration-options">
+          <button class="seg" data-min="1">1 min</button>
+          <button class="seg" data-min="3">3 min</button>
+          <button class="seg" data-min="5">5 min</button>
+          <button class="seg" data-min="20">20 min</button>
+          <button class="seg" data-min="45">45 min</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ───────────────────────────────────────────────────────────────────
+let TOTAL     = 1 * 60;
+const GRAV    = 0.013;
+const MAX_VY  = 3.0;
+const FLOWER_W  = 44;
+const FLOWER_H  = 44;
+const HM_RES    = 2;
+const REPEL_D   = 56;
+const REPEL_F   = 0.025;
+const BUCKET_SZ = 64;
+
+// Avalanche — topple flowers off steep piles toward the shorter neighbor
+const TOPPLE_THRESHOLD = 240; // px height diff between columns that triggers a topple
+const TOPPLE_INTERVAL  = 240; // frames between scans (~4 s at 60 fps)
+const TOPPLE_PER_SCAN  = 2;   // max topples triggered per scan (keeps it gradual)
+const TOPPLE_SCAN_STEP = 10;  // heightmap indices between sample points
+let   toppleFrame      = 0;
+
+// ── FLOWER SVG LIBRARY ────────────────────────────────────────────────────────
+const FLOWER_SVGS = {
+  blue: `<svg width="100%" height="100%" viewBox="0 0 612 662" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M520.301 359.409H519.051L415.926 331.909L513.426 309.409L520.301 308.784C520.301 308.784 624.676 286.909 609.676 206.909C607.801 195.034 602.801 182.534 595.301 168.784C532.801 55.6592 437.176 161.909 437.176 161.909L434.051 165.659L361.551 237.534L392.801 134.409C392.801 134.409 435.926 2.53414 309.051 0.0341423C308.426 0.0341423 307.801 0.0341423 307.176 0.0341423C306.551 0.0341423 306.551 0.0341423 306.551 0.0341423C177.176 -2.46586 222.176 133.159 222.176 133.159L250.301 238.159L178.426 161.284L176.551 159.409C176.551 159.409 124.051 101.284 70.3013 118.159C52.1763 123.784 34.0513 137.534 17.8013 164.409C-48.4487 275.034 91.5513 304.409 91.5513 304.409H92.8013L195.926 331.909L97.8013 354.409L90.9263 355.034C90.9263 355.034 -13.4487 376.909 1.55131 456.909C3.42631 468.159 8.42631 481.284 15.9263 495.034C78.4263 608.159 174.051 501.909 174.051 501.909L176.551 498.159L249.676 425.034L218.426 527.534C218.426 527.534 175.301 659.409 302.176 661.909C302.801 661.909 303.426 661.909 304.051 661.909H304.676C434.051 664.409 389.676 528.159 389.676 528.159L361.551 425.659L432.801 501.909L434.676 504.409C434.676 504.409 479.051 553.159 527.801 548.784C550.301 546.909 573.426 533.784 593.426 499.409C660.301 388.784 520.301 359.409 520.301 359.409Z" fill="#325DCE"/>
+<circle cx="306" cy="331" r="70" fill="#FFC932" stroke="black" stroke-width="20"/>
+</svg>`,
+
+  yellow_y: `<svg width="100%" height="100%" viewBox="0 0 462 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M393.011 271.48H392.066L314.171 250.708L387.818 233.713L393.011 233.241C393.011 233.241 471.85 216.717 460.52 156.289C459.104 147.319 455.327 137.878 449.662 127.491C402.452 42.0422 330.222 122.298 330.222 122.298L327.861 125.131L273.098 179.422L296.703 101.526C296.703 101.526 329.278 1.91417 233.442 0.0257895C232.97 0.0257895 232.498 0.0257895 232.026 0.0257895C231.554 0.0257895 231.554 0.0257895 231.554 0.0257895C133.83 -1.86259 167.821 100.582 167.821 100.582L189.066 179.894L134.775 121.826L133.358 120.41C133.358 120.41 93.7024 76.5052 53.1022 89.2517C39.4115 93.5006 25.7207 103.887 13.4462 124.187C-36.5958 207.748 69.1535 229.936 69.1535 229.936H70.0976L147.993 250.708L73.8744 267.704L68.6814 268.176C68.6814 268.176 -10.1585 284.699 1.17178 345.127C2.58807 353.625 6.36483 363.539 12.03 373.925C59.2395 459.374 131.47 379.118 131.47 379.118L133.358 376.285L188.593 321.05L164.989 398.474C164.989 398.474 132.414 498.086 228.249 499.974C228.722 499.974 229.194 499.974 229.666 499.974H230.138C327.861 501.863 294.343 398.946 294.343 398.946L273.098 321.522L326.917 379.118L328.334 381.006C328.334 381.006 361.852 417.83 398.676 414.525C415.671 413.109 433.139 403.195 448.246 377.23C498.76 293.669 393.011 271.48 393.011 271.48Z" fill="#FFC932"/>
+</svg>`,
+
+  yellow_b: `<svg width="100%" height="100%" viewBox="0 0 500 547" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M451.011 273.106C498.083 244.985 514.027 184.199 486.515 136.551C459.004 88.9025 398.392 72.3183 350.505 99.0255C349.688 44.2008 305.019 0 250 0C194.98 0 150.309 44.2008 149.494 99.0295C101.606 72.3223 40.9913 88.9079 13.4819 136.559C-14.0276 184.206 1.91502 244.992 48.9901 273.11C1.91636 301.23 -14.0276 362.016 13.4832 409.665C40.994 457.314 101.609 473.898 149.497 447.19C150.31 502.019 194.982 546.221 250.003 546.218C305.024 546.218 349.692 502.016 350.507 447.19C398.395 473.896 459.011 457.312 486.518 409.659C514.029 362.01 498.083 301.223 451.011 273.106Z" fill="#FFC932"/>
+<circle cx="249.894" cy="273.108" r="96.7119" fill="#325DCE" stroke="black" stroke-width="20"/>
+</svg>`,
+
+  red_y: `<svg width="100%" height="100%" viewBox="0 0 560 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M560 280C560 244.086 525.445 214.867 482.971 214.867C470.254 214.867 445.671 217.607 418.946 222.447C441.266 206.971 460.586 191.527 469.579 182.533C499.612 152.501 503.384 107.406 477.99 82.0101C452.595 56.6143 407.5 60.3876 377.468 90.4212C368.475 99.4143 353.029 118.736 337.555 141.054C342.393 114.329 345.134 89.7463 345.134 77.0288C345.133 34.5552 315.915 0 280 0C244.085 0 214.867 34.5552 214.867 77.0288C214.867 89.7463 217.608 114.33 222.447 141.055C206.971 118.737 191.527 99.4155 182.533 90.4212H182.532C152.499 60.3864 107.405 56.6167 82.0089 82.0101C56.6143 107.406 60.3876 152.5 90.4212 182.533C99.4143 191.527 118.734 206.971 141.054 222.447C114.329 217.608 89.7463 214.867 77.0276 214.867C34.5552 214.867 0 244.086 0 280C0 315.914 34.5552 345.133 77.0288 345.133C89.7463 345.133 114.33 342.392 141.054 337.553C118.734 353.029 99.4143 368.475 90.4212 377.466C60.3876 407.5 56.6143 452.594 82.0101 477.99C92.973 488.953 108.235 494.931 124.747 494.931C127.331 494.931 129.949 494.784 132.584 494.487C150.783 492.435 168.522 483.589 182.532 469.578C191.525 460.584 206.971 441.264 222.447 418.945C217.607 445.671 214.866 470.254 214.866 482.971C214.866 525.445 244.084 560 279.999 560C315.912 560 345.132 525.445 345.132 482.971C345.132 470.254 342.39 445.67 337.552 418.944C353.028 441.263 368.472 460.584 377.466 469.578C391.476 483.589 409.216 492.435 427.415 494.487C430.051 494.784 432.667 494.931 435.253 494.931C451.763 494.931 467.027 488.952 477.989 477.99C503.384 452.594 499.611 407.5 469.578 377.466C460.586 368.473 441.264 353.029 418.945 337.553C445.67 342.392 470.252 345.133 482.97 345.133C525.445 345.133 560 315.914 560 280Z" fill="#F52E36"/>
+<circle opacity="0.9" cx="280" cy="280" r="75" fill="#FFC932" stroke="black" stroke-width="24"/>
+</svg>`,
+
+  red_b: `<svg width="100%" height="100%" viewBox="0 0 560 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M560 280C560 244.086 525.445 214.867 482.971 214.867C470.254 214.867 445.671 217.607 418.946 222.447C441.266 206.971 460.586 191.527 469.579 182.533C499.612 152.501 503.384 107.406 477.99 82.0101C452.595 56.6143 407.5 60.3876 377.468 90.4212C368.475 99.4143 353.029 118.736 337.555 141.054C342.393 114.329 345.134 89.7463 345.134 77.0288C345.133 34.5552 315.915 0 280 0C244.085 0 214.867 34.5552 214.867 77.0288C214.867 89.7463 217.608 114.33 222.447 141.055C206.971 118.737 191.527 99.4155 182.533 90.4212H182.532C152.499 60.3864 107.405 56.6167 82.0089 82.0101C56.6143 107.406 60.3876 152.5 90.4212 182.533C99.4143 191.527 118.734 206.971 141.054 222.447C114.329 217.608 89.7463 214.867 77.0276 214.867C34.5552 214.867 0 244.086 0 280C0 315.914 34.5552 345.133 77.0288 345.133C89.7463 345.133 114.33 342.392 141.054 337.553C118.734 353.029 99.4143 368.475 90.4212 377.466C60.3876 407.5 56.6143 452.594 82.0101 477.99C92.973 488.953 108.235 494.931 124.747 494.931C127.331 494.931 129.949 494.784 132.584 494.487C150.783 492.435 168.522 483.589 182.532 469.578C191.525 460.584 206.971 441.264 222.447 418.945C217.607 445.671 214.866 470.254 214.866 482.971C214.866 525.445 244.084 560 279.999 560C315.912 560 345.132 525.445 345.132 482.971C345.132 470.254 342.39 445.67 337.552 418.944C353.028 441.263 368.472 460.584 377.466 469.578C391.476 483.589 409.216 492.435 427.415 494.487C430.051 494.784 432.667 494.931 435.253 494.931C451.763 494.931 467.027 488.952 477.989 477.99C503.384 452.594 499.611 407.5 469.578 377.466C460.586 368.473 441.264 353.029 418.945 337.553C445.67 342.392 470.252 345.133 482.97 345.133C525.445 345.133 560 315.914 560 280Z" fill="#F52E36"/>
+<circle opacity="0.9" cx="280" cy="280" r="73" fill="#325DCE" stroke="black" stroke-width="20"/>
+</svg>`,
+};
+
+// Pick a random flower SVG.
+// Blue group: 1.2× size boost. Yellow star (yellow_y): 1.2×. Others: 1.0×.
+function pickFlowerSVG() {
+  const group = Math.floor(Math.random() * 3); // 0=blue, 1=yellow, 2=red
+  if (group === 0) return { svg: FLOWER_SVGS.blue, scaleMult: 1.2 };
+  if (group === 1) {
+    const isStarY = Math.random() < 0.5;
+    return { svg: isStarY ? FLOWER_SVGS.yellow_y : FLOWER_SVGS.yellow_b, scaleMult: 1.0 };
+  }
+  return {
+    svg: Math.random() < 0.5 ? FLOWER_SVGS.red_y : FLOWER_SVGS.red_b,
+    scaleMult: 1.0
+  };
+}
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let flowers    = [];
+let heightmap  = [];
+let elapsed    = 0;
+let running    = false;
+let lastTick   = null;
+let animId     = null;
+let spawnAccum = 0;
+let wakeLock         = null;
+let collapsing       = false;  // always false — referenced by checkTopples/tickPhysics
+let flatCollapsing   = false;
+let flatCollapseTimeout = null;
+
+const garden       = document.getElementById('garden');
+const clockEl      = document.getElementById('clock');
+const labelEl      = document.getElementById('label');
+const statusDot    = document.getElementById('status-dot');
+const btnPlayPause = document.getElementById('btnPlayPause');
+const btnReset     = document.getElementById('btnReset');
+const viewportEl   = document.getElementById('viewport');
+
+const VW = () => viewportEl.clientWidth;
+const VH = () => {
+  if (document.body.dataset.displayMode === 'safari') {
+    // Safari browser shrinks innerHeight to exclude the bottom toolbar.
+    // Use screen.height minus an estimate of the status bar so flowers
+    // settle at the physical screen bottom (behind the toolbar).
+    return Math.max(viewportEl.clientHeight, window.screen.height - 50);
+  }
+  return viewportEl.clientHeight;
+};
+
+// ── WAKE LOCK — keep screen on while timer runs ───────────────────────────
+async function acquireWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try { wakeLock = await navigator.wakeLock.request('screen'); } catch (_) {}
+}
+function releaseWakeLock() {
+  if (wakeLock) { wakeLock.release(); wakeLock = null; }
+}
+// iOS drops the lock when the app goes to background; re-acquire on return
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && running) acquireWakeLock();
+});
+
+// ── ICONS ──────────────────────────────────────────────────────────────────
+const ICON_PLAY  = '<svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15c0 .9 1 1.4 1.7.9l12-7.5c.7-.4.7-1.4 0-1.8l-12-7.5C8 3.1 7 3.6 7 4.5z"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4" height="15" rx="1.2"/><rect x="14" y="4.5" width="4" height="15" rx="1.2"/></svg>';
+function setPlayPauseIcon(state) {
+  btnPlayPause.innerHTML = state === 'pause' ? ICON_PAUSE : ICON_PLAY;
+  btnPlayPause.setAttribute('aria-label', state === 'pause' ? 'Pause' : 'Start');
+}
+
+
+// ── HEIGHTMAP ────────────────────────────────────────────────────────────────
+function initHeightmap() {
+  const W   = VW();
+  const H   = VH();
+  const len = Math.ceil(W / HM_RES) + 2;
+  heightmap = new Array(len).fill(H);
+}
+
+function hmIdx(x) {
+  return Math.max(0, Math.min(heightmap.length - 1, Math.floor(x / HM_RES)));
+}
+
+function findSettleY(cx, scale) {
+  const r  = (FLOWER_W / 2) * scale * 0.6;
+  const i0 = hmIdx(cx - r);
+  const i1 = hmIdx(cx + r);
+  let top  = VH();
+  for (let i = i0; i <= i1; i++) {
+    if (heightmap[i] < top) top = heightmap[i];
+  }
+  return top - (FLOWER_H / 2) * scale - 1;
+}
+
+function paintHeightmap(cx, cy, scale) {
+  const r   = (FLOWER_W / 2) * scale;
+  const i0  = hmIdx(cx - r);
+  const i1  = hmIdx(cx + r);
+  const top = cy - (FLOWER_H / 2) * scale;
+  for (let i = i0; i <= i1; i++) {
+    if (top < heightmap[i]) heightmap[i] = top;
+  }
+}
+
+// Rebuild heightmap from scratch using only currently settled flowers.
+// Called after a flower is un-settled so the column height is correct.
+function rebuildHeightmap() {
+  const H   = VH();
+  const len = heightmap.length;
+  heightmap.fill(H);
+  for (const f of flowers) {
+    if (f.settled) paintHeightmap(f.x, f.y, f.scale);
+  }
+}
+
+// ── SPAWN ─────────────────────────────────────────────────────────────────────
+function spawnFlower() {
+  const W   = VW();
+  const x   = W * (0.02 + Math.random() * 0.96);
+  const y   = -FLOWER_H;
+  const vx  = (Math.random() - 0.5) * 0.5;
+  const vy  = 0.6 + Math.random() * 0.5;
+
+  const mobile = document.body.classList.contains('condensed');
+  const scale  = mobile
+    ? 0.65 + Math.random() * 0.35   // mobile:  0.65–1.00 — tighter ceiling, lower floor
+    : 0.78 + Math.random() * 0.50;  // desktop: 0.78–1.28
+  const rot  = Math.random() * 360;
+  const spin = (Math.random() - 0.5) * 0.9;
+
+  const { svg, scaleMult } = pickFlowerSVG();
+  const finalScale = scale * scaleMult;
+
+  const el = document.createElement('div');
+  el.className = 'flower';
+  el.innerHTML = `<div class="petal-wrap">${svg}</div>`;
+  garden.appendChild(el);
+  setTransform(el, x, y, rot, finalScale);
+
+  flowers.push({ el, x, y, vx, vy, rot, spin, scale: finalScale, settled: false });
+}
+
+// ── SETTLING ─────────────────────────────────────────────────────────────────
+function trySettle(f) {
+  const settleY = findSettleY(f.x, f.scale);
+  if (settleY < f.y - 4) return false;
+
+  const RESTITUTION   = 0.15;
+  const BOUNCE_VY_MIN = 0.6;
+  if (f.vy > BOUNCE_VY_MIN) {
+    f.y    = settleY;
+    f.vy   = -f.vy * RESTITUTION;
+    f.vx  *= 0.6;
+    f.spin *= 0.5;
+    setTransform(f.el, f.x, f.y, f.rot, f.scale);
+    return true;
+  }
+
+  f.settled = true;
+  f.y       = settleY;
+  f.vx      = 0;
+  f.vy      = 0;
+  f.spin    = 0;
+  f.rot    += (Math.random() - 0.5) * 22;
+
+  paintHeightmap(f.x, f.y, f.scale);
+  f.el.classList.add('settled');
+  setTransform(f.el, f.x, f.y, f.rot, f.scale);
+  return true;
+}
+
+// ── REPULSION ────────────────────────────────────────────────────────────────
+function buildBuckets() {
+  const b = {};
+  for (const f of flowers) {
+    if (f.settled) continue;
+    const key = Math.floor(f.x / BUCKET_SZ) + ',' + Math.floor(f.y / BUCKET_SZ);
+    (b[key] = b[key] || []).push(f);
+  }
+  return b;
+}
+
+function applyRepulsion(dtScale) {
+  const buckets = buildBuckets();
+  for (const f of flowers) {
+    if (f.settled) continue;
+    const bx = Math.floor(f.x / BUCKET_SZ);
+    const by = Math.floor(f.y / BUCKET_SZ);
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        const nb = buckets[(bx + dx) + ',' + (by + dy)];
+        if (!nb) continue;
+        for (const n of nb) {
+          if (n === f) continue;
+          const ddx = f.x - n.x;
+          const ddy = f.y - n.y;
+          const d2  = ddx * ddx + ddy * ddy;
+          if (d2 < REPEL_D * REPEL_D && d2 > 0.01) {
+            const d     = Math.sqrt(d2);
+            const force = (REPEL_D - d) / REPEL_D * REPEL_F;
+            f.vx += (ddx / d) * force * dtScale;
+            f.vy += (ddy / d) * force * dtScale;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// ── AVALANCHE — topple flowers off steep piles ────────────────────────────────
+// Un-settle the topmost flower near `x`, push it sideways (`dir`: -1 left, +1 right).
+function toppleFlowerNear(x, dir) {
+  let best = null;
+  for (const f of flowers) {
+    if (!f.settled) continue;
+    if (Math.abs(f.x - x) > 32) continue;
+    if (!best || f.y < best.y) best = f;
+  }
+  if (!best) return false;
+
+  best.settled = false;
+  best.el.classList.remove('settled');
+  best.vx   = dir * (0.5 + Math.random() * 0.7);
+  best.vy   = 0.3 + Math.random() * 0.3;       // already falling downward
+  best.spin = (Math.random() - 0.5) * 0.9;
+  rebuildHeightmap();
+  return true;
+}
+
+// Scan the heightmap for slopes steeper than TOPPLE_THRESHOLD.
+// Called once per TOPPLE_INTERVAL frames; triggers at most TOPPLE_PER_SCAN topples.
+function checkTopples() {
+  if (collapsing) return;
+  if (++toppleFrame % TOPPLE_INTERVAL !== 0) return;
+
+  let triggered = 0;
+  let skip      = 0;
+
+  for (let i = TOPPLE_SCAN_STEP; i < heightmap.length - TOPPLE_SCAN_STEP; i++) {
+    if (skip > 0)                       { skip--; continue; }
+    if (triggered >= TOPPLE_PER_SCAN)   break;
+
+    const curr  = heightmap[i];
+    const left  = heightmap[i - TOPPLE_SCAN_STEP];
+    const right = heightmap[i + TOPPLE_SCAN_STEP];
+
+    // `left - curr > 0` means left neighbour is a shorter pile (higher y value)
+    if (left - curr > TOPPLE_THRESHOLD) {
+      if (toppleFlowerNear(i * HM_RES, -1)) { triggered++; skip = TOPPLE_SCAN_STEP * 3; }
+    } else if (right - curr > TOPPLE_THRESHOLD) {
+      if (toppleFlowerNear(i * HM_RES,  1)) { triggered++; skip = TOPPLE_SCAN_STEP * 3; }
+    }
+  }
+}
+
+// ── FLAT PILE — drop all flowers straight to the floor, overlapping ───────────
+function flattenToBottom() {
+  flatCollapseTimeout = null;
+  flatCollapsing = true;
+
+  flowers.forEach(f => {
+    const wrap = f.el.querySelector('.petal-wrap');
+    if (wrap) wrap.classList.remove('shaking');
+
+    f.settled = false;
+    f.el.classList.remove('settled');
+    f.vx   = (Math.random() - 0.5) * 0.3;
+    f.vy   = -(0.8 + Math.random() * 0.6);
+    f.spin = (Math.random() - 0.5) * 1.2;
+  });
+
+  const FLAT_GRAV_VAL    = 0.05;
+  const FLAT_MAX_VY      = 10.0;
+  const FLAT_RESTITUTION = 0.3;
+  const FLAT_SETTLE_VY   = 0.25;
+
+  let lastFlatTs = null;
+
+  function loopFlat(ts) {
+    if (!flatCollapsing) return;
+    const dt = lastFlatTs ? Math.min(ts - lastFlatTs, 80) : 16;
+    lastFlatTs = ts;
+    const dtScale = dt / (1000 / 60);
+    const W = VW();
+    const H = VH();
+
+    for (const f of flowers) {
+      if (f.settled) continue;
+      f.vy = Math.min(f.vy + FLAT_GRAV_VAL * dtScale, FLAT_MAX_VY);
+      f.x += f.vx * dtScale;
+      f.y += f.vy * dtScale;
+      f.rot += f.spin * dtScale;
+
+      if (f.x < FLOWER_W / 2)     { f.x = FLOWER_W / 2;     f.vx =  Math.abs(f.vx) * 0.3; }
+      if (f.x > W - FLOWER_W / 2) { f.x = W - FLOWER_W / 2; f.vx = -Math.abs(f.vx) * 0.3; }
+
+      const floorY = H - (FLOWER_H / 2) * f.scale;
+      if (f.y >= floorY) {
+        f.y = floorY;
+        if (Math.abs(f.vy) > FLAT_SETTLE_VY) {
+          f.vy    = -f.vy * FLAT_RESTITUTION;
+          f.vx   *= 0.7;
+          f.spin *= 0.5;
+        } else {
+          f.settled = true;
+          f.vx = 0; f.vy = 0; f.spin = 0;
+        }
+      }
+
+      setTransform(f.el, f.x, f.y, f.rot, f.scale);
+    }
+
+    if (flowers.every(f => f.settled)) {
+      flatCollapsing = false;
+      return;
+    }
+    requestAnimationFrame(loopFlat);
+  }
+
+  requestAnimationFrame(loopFlat);
+}
+
+function setTransform(el, x, y, rot, scale) {
+  el.style.transform =
+    `translate(${x - FLOWER_W / 2}px,${y - FLOWER_H / 2}px) rotate(${rot}deg) scale(${scale})`;
+}
+
+function tickPhysics(dt) {
+  const W       = VW();
+  const H       = VH();
+  const dtScale = dt / (1000 / 60);
+
+  applyRepulsion(dtScale);
+  if (!collapsing) checkTopples();
+
+  for (let i = flowers.length - 1; i >= 0; i--) {
+    const f = flowers[i];
+    if (f.settled) continue;
+
+    if (collapsing) f.vx += (VW() / 2 - f.x) * 0.00015 * dtScale;
+    f.vy = Math.min(f.vy + GRAV * dtScale, MAX_VY);
+
+    f.x   += f.vx * dtScale;
+    f.y   += f.vy * dtScale;
+    f.rot += f.spin * dtScale;
+
+    if (f.x < FLOWER_W / 2)     { f.x = FLOWER_W / 2;     f.vx =  Math.abs(f.vx) * 0.4; }
+    if (f.x > W - FLOWER_W / 2) { f.x = W - FLOWER_W / 2; f.vx = -Math.abs(f.vx) * 0.4; }
+
+    if (f.y >= findSettleY(f.x, f.scale)) {
+      if (!trySettle(f)) {
+        f.vy = Math.max(f.vy * 0.5, 0.3);
+      }
+      continue;
+    }
+
+    if (f.y > H + FLOWER_H * 2) {
+      f.el.remove();
+      flowers.splice(i, 1);
+      continue;
+    }
+
+    setTransform(f.el, f.x, f.y, f.rot, f.scale);
+  }
+}
+
+// ── SPAWN RATE ────────────────────────────────────────────────────────────────
+// Sqrt ramp: 0.012 + 0.085 * √p  →  ~0.72/sec at start, ~5.8/sec at end
+// Mobile gets 0.6× (smaller canvas fills up faster; also flowers are 10% smaller).
+function spawnRate(sec) {
+  const p    = Math.min(1, sec / TOTAL);
+  const base = 0.012 + 0.085 * Math.sqrt(p);
+  return document.body.classList.contains('condensed') ? base * 0.6 : base;
+}
+
+// ── TIMER LOOP ────────────────────────────────────────────────────────────────
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function loop(ts) {
+  if (!running) return;
+  const dt = lastTick ? Math.min(ts - lastTick, 80) : 16;
+  lastTick  = ts;
+  elapsed  += dt / 1000;
+
+  if (elapsed >= TOTAL) {
+    elapsed = TOTAL;
+    running = false;
+    releaseWakeLock();
+    clockEl.textContent      = '00:00';
+    labelEl.textContent      = 'Done';
+    statusDot.classList.remove('running');
+    statusDot.classList.add('done');
+    setPlayPauseIcon('play');
+    btnPlayPause.disabled    = true;
+    setSegsDisabled(false);
+    for (let i = 0; i < 10; i++) spawnFlower();
+    flowers.forEach((f) => {
+      const wrap = f.el.querySelector('.petal-wrap');
+      if (wrap) {
+        wrap.style.animationDelay = (Math.random() * 0.4).toFixed(2) + 's';
+        wrap.classList.add('shaking');
+      }
+    });
+    flatCollapseTimeout = setTimeout(flattenToBottom, 1500);
+    tickPhysics(dt);
+    animId = requestAnimationFrame(loop);
+    return;
+  }
+
+  clockEl.textContent = formatTime(TOTAL - elapsed);
+
+  spawnAccum += spawnRate(elapsed) * (dt / (1000 / 60));
+  while (spawnAccum >= 1) { spawnFlower(); spawnAccum -= 1; }
+
+  tickPhysics(dt);
+  animId = requestAnimationFrame(loop);
+}
+
+// ── CONTROLS ─────────────────────────────────────────────────────────────────
+btnPlayPause.addEventListener('click', () => {
+  if (running) {
+    running = false;
+    releaseWakeLock();
+    setPlayPauseIcon('play');
+    statusDot.classList.remove('running');
+    labelEl.textContent = 'Paused';
+    if (animId) cancelAnimationFrame(animId);
+    setSegsDisabled(false);
+  } else {
+    running  = true;
+    acquireWakeLock();
+    lastTick = null;
+    setPlayPauseIcon('pause');
+    statusDot.classList.remove('done');
+    statusDot.classList.add('running');
+    labelEl.textContent = 'Focus';
+    setSegsDisabled(true);
+    animId = requestAnimationFrame(loop);
+  }
+});
+
+btnReset.addEventListener('click', doReset);
+
+function doReset() {
+  running        = false;
+  releaseWakeLock();
+  collapsing     = false;
+  flatCollapsing = false;
+  if (flatCollapseTimeout) { clearTimeout(flatCollapseTimeout); flatCollapseTimeout = null; }
+  if (animId) cancelAnimationFrame(animId);
+  elapsed    = 0;
+  spawnAccum = 0;
+  lastTick   = null;
+
+  setPlayPauseIcon('play');
+  btnPlayPause.disabled    = false;
+  setSegsDisabled(false);
+  clockEl.textContent      = formatTime(TOTAL);
+  labelEl.textContent      = 'Ready';
+  statusDot.classList.remove('running', 'done');
+
+  flowers.forEach(f => f.el.classList.add('gone'));
+  setTimeout(() => {
+    flowers.forEach(f => f.el.remove());
+    flowers = [];
+    initHeightmap();
+  }, 850);
+}
+
+// ── DURATION PRESETS ─────────────────────────────────────────────────────────
+function setSegsDisabled(disabled) {
+  document.querySelectorAll('.seg[data-min]').forEach(b => b.disabled = disabled);
+}
+const durationBtnsEl    = document.getElementById('duration-btns');
+const durationTriggerEl = durationBtnsEl.querySelector('.duration-trigger');
+const durationLabelEl   = durationBtnsEl.querySelector('.duration-trigger-label');
+
+function fmtMinsLabel(secs) {
+  const m = Math.round(secs / 60);
+  return `${m} min`;
+}
+function syncDurationLabel() {
+  durationLabelEl.textContent = fmtMinsLabel(TOTAL);
+  const currentMin = Math.round(TOTAL / 60);
+  document.querySelectorAll('.seg[data-min]').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.min, 10) === currentMin);
+  });
+}
+
+durationTriggerEl.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isOpen = durationBtnsEl.classList.toggle('open');
+  durationTriggerEl.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+});
+document.addEventListener('click', (e) => {
+  if (!durationBtnsEl.contains(e.target)) {
+    durationBtnsEl.classList.remove('open');
+    durationTriggerEl.setAttribute('aria-expanded', 'false');
+  }
+});
+
+document.querySelectorAll('.seg[data-min]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (running) return;
+    const mins = parseInt(btn.dataset.min, 10);
+    TOTAL = mins * 60;
+    syncDurationLabel();
+    durationBtnsEl.classList.remove('open');
+    durationTriggerEl.setAttribute('aria-expanded', 'false');
+    doReset();
+  });
+});
+
+// ── LAYOUT — fixed positions per viewport size ────────────────────────────────
+// Mobile / tablet (≤ 900px): condensed panel, centered bottom
+// Desktop (> 900px):         normal panel, right bottom
+function applyLayout() {
+  const condensed = window.innerWidth <= 900;
+  document.body.classList.toggle('condensed', condensed);
+  document.body.dataset.posH = condensed ? 'center' : 'right';
+  document.body.dataset.posV = 'bottom';
+
+  const isStandalone = window.navigator.standalone === true ||
+                       window.matchMedia('(display-mode: standalone)').matches;
+  const isChromeIOS  = /CriOS/i.test(navigator.userAgent);
+  document.body.dataset.displayMode = isStandalone ? 'standalone'
+                                    : isChromeIOS  ? 'chrome'
+                                    : 'safari';
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+function setup() {
+  applyLayout();
+  initHeightmap();
+  clockEl.textContent = formatTime(TOTAL);
+  setPlayPauseIcon('play');
+  labelEl.textContent = 'Ready';
+  syncDurationLabel();
+  window.addEventListener('resize', () => {
+    applyLayout();
+    initHeightmap();
+  });
+}
+
+setup();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+</body>
+</html>
