@@ -807,7 +807,7 @@ const VH = () => {
   if (document.body.dataset.displayMode === 'safari') {
     // Safari's clientHeight stops at the toolbar boundary; add ~35px so flowers
     // tuck visually under/behind the translucent toolbar without going off-screen.
-    return viewportEl.clientHeight + 35;
+    return viewportEl.clientHeight + 15;
   }
   return viewportEl.clientHeight;
 };
