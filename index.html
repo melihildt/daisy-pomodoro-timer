@@ -803,15 +803,7 @@ const btnReset     = document.getElementById('btnReset');
 const viewportEl   = document.getElementById('viewport');
 
 const VW = () => viewportEl.clientWidth;
-const VH = () => {
-  if (document.body.dataset.displayMode === 'safari') {
-    // Safari browser shrinks innerHeight to exclude the bottom toolbar.
-    // Use screen.height minus an estimate of the status bar so flowers
-    // settle at the physical screen bottom (behind the toolbar).
-    return Math.max(viewportEl.clientHeight, window.screen.height - 50);
-  }
-  return viewportEl.clientHeight;
-};
+const VH = () => viewportEl.clientHeight;
 
 // ── WAKE LOCK — keep screen on while timer runs ───────────────────────────
 async function acquireWakeLock() {
