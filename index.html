@@ -803,7 +803,10 @@ const btnReset     = document.getElementById('btnReset');
 const viewportEl   = document.getElementById('viewport');
 
 const VW = () => viewportEl.clientWidth;
-const VH = () => viewportEl.clientHeight;
+const VH = () =>
+  document.body.dataset.displayMode === 'standalone'
+    ? window.screen.height          // PWA: no toolbar, ICB = full screen
+    : viewportEl.clientHeight;      // Safari/Chrome/desktop: clipped at clientHeight
 
 // ── WAKE LOCK — keep screen on while timer runs ───────────────────────────
 async function acquireWakeLock() {
