@@ -803,13 +803,7 @@ const btnReset     = document.getElementById('btnReset');
 const viewportEl   = document.getElementById('viewport');
 
 const VW = () => viewportEl.clientWidth;
-const VH = () => {
-  const mode = document.body.dataset.displayMode;
-  // Safari and PWA toolbars float over content; flowers may use the full screen.
-  // Chrome's bottom bar reserves space; canvas stays within clientHeight.
-  if (mode === 'safari' || mode === 'standalone') return window.screen.height;
-  return viewportEl.clientHeight;
-};
+const VH = () => viewportEl.clientHeight;
 
 // ── WAKE LOCK — keep screen on while timer runs ───────────────────────────
 async function acquireWakeLock() {
@@ -1311,9 +1305,7 @@ function applyLayout() {
   if (mode === 'chrome') {
     uiEl.style.bottom = '32px';
   } else if (mode === 'safari') {
-    // screen.height - clientH is the height of the floating toolbar region;
-    // add 32px of breathing room above it
-    uiEl.style.bottom = (32 + window.screen.height - clientH) + 'px';
+    uiEl.style.bottom = '32px';
   } else if (mode === 'standalone') {
     uiEl.style.bottom = 'calc(32px + env(safe-area-inset-bottom, 0px))';
   }
@@ -1366,7 +1358,9 @@ function initDebugOverlay() {
   }
 
   function update() {
-    const vv = window.visualViewport;
+    const vv  = window.visualViewport;
+    const cs  = (el) => window.getComputedStyle(el);
+    const vp  = document.getElementById('viewport');
     el.textContent = [
       `inner   ${window.innerWidth} × ${window.innerHeight}`,
       `vvp     ${vv ? Math.round(vv.width) + ' × ' + Math.round(vv.height) : 'n/a'}`,
@@ -1374,6 +1368,11 @@ function initDebugOverlay() {
       `standalone  ${navigator.standalone ?? 'n/a'}`,
       `displayMode ${document.body.dataset.displayMode ?? '—'}`,
       `safe-area-b ${getSafeAreaBottom()}px`,
+      `── clip check ──`,
+      `html    h=${cs(document.documentElement).height} ov=${cs(document.documentElement).overflow}`,
+      `body    h=${cs(document.body).height} ov=${cs(document.body).overflow}`,
+      `#vp     h=${vp ? cs(vp).height : '?'} ov=${vp ? cs(vp).overflow : '?'} pos=${vp ? cs(vp).position : '?'}`,
+      `#vp.cli ${vp ? vp.clientHeight : '?'}`,
     ].join('\n');
   }
 
