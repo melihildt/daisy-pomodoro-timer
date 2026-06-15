@@ -1223,14 +1223,7 @@ function loop(ts) {
     btnPlayPause.disabled    = true;
     setSegsDisabled(false);
     for (let i = 0; i < 10; i++) spawnFlower();
-    flowers.forEach((f) => {
-      const wrap = f.el.querySelector('.petal-wrap');
-      if (wrap) {
-        wrap.style.animationDelay = (Math.random() * 0.4).toFixed(2) + 's';
-        wrap.classList.add('shaking');
-      }
-    });
-    flatCollapseTimeout = setTimeout(flattenToBottom, 1500);
+    flatCollapseTimeout = setTimeout(flattenToBottom, 500);
     tickPhysics(dt);
     animId = requestAnimationFrame(loop);
     return;
