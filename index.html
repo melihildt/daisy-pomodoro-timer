@@ -1096,8 +1096,8 @@ function flattenToBottom() {
 
   const FLAT_GRAV_VAL    = 0.05;
   const FLAT_MAX_VY      = 10.0;
-  const FLAT_RESTITUTION = 0.3;
-  const FLAT_SETTLE_VY   = 0.25;
+  const FLAT_RESTITUTION = 0.50;
+  const FLAT_SETTLE_VY   = 0.40;
 
   let lastFlatTs = null;
 
@@ -1124,8 +1124,8 @@ function flattenToBottom() {
         f.y = floorY;
         if (Math.abs(f.vy) > FLAT_SETTLE_VY) {
           f.vy    = -f.vy * FLAT_RESTITUTION;
-          f.vx   *= 0.7;
-          f.spin *= 0.5;
+          f.vx   *= 0.8;
+          f.spin *= 0.7;
         } else {
           f.settled = true;
           f.vx = 0; f.vy = 0; f.spin = 0;
