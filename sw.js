@@ -1,9 +1,11 @@
 const CACHE = 'daisy-v3';
+const BASE = new URL('./', self.location).href;
 const PRECACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon.svg',
+  BASE,
+  BASE + 'index.html',
+  BASE + 'manifest.json',
+  BASE + 'icons/icon.svg',
+  BASE + 'icons/icon-180.png',
 ];
 
 self.addEventListener('install', e => {
