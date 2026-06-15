@@ -633,6 +633,20 @@ body.condensed #btnReset {
 .seg:active:not(:disabled) { transform: scale(var(--press-scale)); }
 .seg:disabled { opacity: 0.4; cursor: default; }
 
+.duration-unit {
+  display: flex;
+  align-items: center;
+  padding: 0 10px 0 6px;
+  color: rgba(235, 235, 245, 0.35);
+  font-family: var(--font-sans);
+  font-size: var(--text-subhead);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tr-subhead);
+  pointer-events: none;
+  white-space: nowrap;
+}
+body.condensed .duration-unit { display: none; }
+
 /* ── CONTROL ROW ── */
 #ctrls {
   display: flex;
@@ -756,11 +770,12 @@ body.condensed #btnReset {
           <svg class="duration-trigger-chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5l3.5 3.5 3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="duration-options">
-          <button class="seg" data-min="1">1 min</button>
-          <button class="seg" data-min="3">3 min</button>
-          <button class="seg" data-min="5">5 min</button>
-          <button class="seg" data-min="20">20 min</button>
-          <button class="seg" data-min="45">45 min</button>
+          <button class="seg" data-min="1">1</button>
+          <button class="seg" data-min="3">3</button>
+          <button class="seg" data-min="5">5</button>
+          <button class="seg" data-min="20">20</button>
+          <button class="seg" data-min="45">45</button>
+          <span class="duration-unit">min</span>
         </div>
       </div>
     </div>
