@@ -327,24 +327,11 @@ body {
 #ui {
   position: absolute;
   z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--space-6);
   user-select: none;
   min-width: 320px;
-
-  background: rgba(28, 28, 30, 0.62);
-  -webkit-backdrop-filter: var(--glass-blur-regular);
-  backdrop-filter: var(--glass-blur-regular);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255,255,255,0.16),
-    inset 0 -1px 0 0 rgba(0,0,0,0.30),
-    inset 1px 0 0 0 rgba(255,255,255,0.05),
-    inset -1px 0 0 0 rgba(255,255,255,0.05),
-    var(--glass-shadow-lg);
   border-radius: var(--radius-xl);
   padding: var(--space-7) var(--space-7) var(--space-6);
+  box-shadow: var(--glass-shadow-lg);
   transition:
     left  var(--dur-base) var(--ease-standard),
     right var(--dur-base) var(--ease-standard),
@@ -352,6 +339,50 @@ body {
     bottom var(--dur-base) var(--ease-standard),
     padding var(--dur-base) var(--ease-standard),
     min-width var(--dur-base) var(--ease-standard);
+}
+
+#ui .glass-mask {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+#ui .glass-filter,
+#ui .glass-overlay,
+#ui .glass-specular {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+#ui .glass-filter {
+  z-index: 0;
+  -webkit-backdrop-filter: blur(5px) saturate(180%) brightness(1.00);
+  backdrop-filter: blur(5px) saturate(180%) brightness(1.00);
+  filter: url(#liquidGlassLens);
+}
+#ui .glass-overlay {
+  z-index: 1;
+  background: rgba(28, 28, 30, 0.60);
+}
+#ui .glass-specular {
+  z-index: 2;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 0 rgba(0,0,0,0.30),
+    inset 1px 0 0 0 rgba(255,255,255,0.05),
+    inset -1px 0 0 0 rgba(255,255,255,0.05);
+  opacity: 0.25;
+}
+#ui .glass-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-6);
 }
 
 /* ── POSITION — driven by body data attrs ── */
@@ -375,8 +406,8 @@ body.condensed #ui {
   max-width: 440px;
   padding: var(--space-5);
   border-radius: var(--radius-lg);
-
-  display: flex;
+}
+body.condensed #ui .glass-content {
   flex-direction: row;
   align-items: flex-end;
   justify-content: space-between;
@@ -685,10 +716,26 @@ body.condensed #btnReset {
 </head>
 <body>
 
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <filter id="liquidGlassLens" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox">
+    <feComponentTransfer in="SourceAlpha" result="alpha">
+      <feFuncA type="identity"/>
+    </feComponentTransfer>
+    <feGaussianBlur in="alpha" stdDeviation="20" result="blur"/>
+    <feDisplacementMap in="SourceGraphic" in2="blur" scale="40" xChannelSelector="A" yChannelSelector="A"/>
+  </filter>
+</svg>
+
 <div id="viewport">
   <div id="garden"></div>
 
   <div id="ui">
+    <div class="glass-mask">
+      <div class="glass-filter"></div>
+      <div class="glass-overlay"></div>
+      <div class="glass-specular"></div>
+    </div>
+    <div class="glass-content">
     <div class="ui-col ui-col-left">
       <div id="header">
         <div id="status-dot"></div>
@@ -717,6 +764,7 @@ body.condensed #btnReset {
         </div>
       </div>
     </div>
+    </div><!-- /.glass-content -->
   </div>
 </div>
 
@@ -803,12 +851,10 @@ const btnReset     = document.getElementById('btnReset');
 const viewportEl   = document.getElementById('viewport');
 
 const VW = () => viewportEl.clientWidth;
-const VH = () => {
-  const mode = document.body.dataset.displayMode;
-  if (mode === 'standalone') return window.screen.height; // PWA: ICB = full screen
-  if (mode === 'safari') return Math.round(viewportEl.clientHeight * 1.15); // TEST: ~800px
-  return viewportEl.clientHeight;
-};
+const VH = () =>
+  document.body.dataset.displayMode === 'standalone'
+    ? window.screen.height     // PWA: no toolbar, ICB = full screen
+    : viewportEl.clientHeight; // Safari/Chrome/desktop: clipped at clientHeight
 
 // ── WAKE LOCK — keep screen on while timer runs ───────────────────────────
 async function acquireWakeLock() {
