@@ -7,8 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Daisy Field">
 <meta name="theme-color" content="#000000">
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/icons/icon-180.png">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
@@ -20,86 +20,35 @@
 
 :root {
   --font-sans:    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
   --font-rounded: ui-rounded, -apple-system, "SF Pro Rounded", "SF Compact Rounded", "Inter", system-ui, sans-serif;
-  --font-serif:   ui-serif, "New York", "IBM Plex Serif", Georgia, serif;
-  --font-mono:    ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Monaco, "Cascadia Mono", monospace;
 
-  /* Type scale (iOS HIG) */
-  --text-large-title:    34px;  --lh-large-title:    41px;  --tr-large-title:    0.37px;
-  --text-title-1:        28px;  --lh-title-1:        34px;  --tr-title-1:        0.36px;
-  --text-title-2:        22px;  --lh-title-2:        28px;  --tr-title-2:        0.35px;
-  --text-title-3:        20px;  --lh-title-3:        25px;  --tr-title-3:        0.38px;
-  --text-headline:       17px;  --lh-headline:       22px;  --tr-headline:      -0.43px;
-  --text-body:           17px;  --lh-body:           22px;  --tr-body:          -0.43px;
-  --text-callout:        16px;  --lh-callout:        21px;  --tr-callout:       -0.32px;
-  --text-subhead:        15px;  --lh-subhead:        20px;  --tr-subhead:       -0.23px;
-  --text-footnote:       13px;  --lh-footnote:       18px;  --tr-footnote:      -0.08px;
-  --text-caption-1:      12px;  --lh-caption-1:      16px;  --tr-caption-1:      0px;
-  --text-caption-2:      11px;  --lh-caption-2:      13px;  --tr-caption-2:      0.07px;
+  /* Type scale (iOS HIG) — used subsets */
+  --text-callout:  16px;  --tr-callout:  -0.32px;
+  --text-subhead:  15px;  --tr-subhead:  -0.23px;
+  --text-footnote: 13px;  --lh-footnote: 18px;   --tr-footnote: -0.08px;
 
   /* Weights */
-  --weight-ultralight: 100;
-  --weight-thin:       200;
-  --weight-light:      300;
-  --weight-regular:    400;
-  --weight-medium:     500;
-  --weight-semibold:   600;
-  --weight-bold:       700;
-  --weight-heavy:      800;
-  --weight-black:      900;
+  --weight-thin:     200;
+  --weight-medium:   500;
+  --weight-semibold: 600;
 
   /* System colors — iOS 26 (light) */
-  --blue:    #007AFF;
-  --green:   #34C759;
-  --indigo:  #5856D6;
-  --orange:  #FF9500;
-  --pink:    #FF2D55;
-  --purple:  #AF52DE;
-  --red:     #FF3B30;
-  --teal:    #30B0C7;
-  --yellow:  #FFCC00;
-  --mint:    #00C7BE;
-  --cyan:    #32ADE6;
-  --brown:   #A2845E;
+  --green:  #34C759;
+  --yellow: #FFCC00;
 
-  /* Grayscale */
-  --gray:    #8E8E93;
-  --gray-2:  #AEAEB2;
-  --gray-3:  #C7C7CC;
-  --gray-4:  #D1D1D6;
-  --gray-5:  #E5E5EA;
-  --gray-6:  #F2F2F7;
+  /* Label / background semantics */
+  --label-primary:   rgba(0, 0, 0, 1);
+  --label-tertiary:  rgba(60, 60, 67, 0.30);
 
-  /* Label / fill / background semantics */
-  --label-primary:        rgba(0, 0, 0, 1);
-  --label-secondary:      rgba(60, 60, 67, 0.60);
-  --label-tertiary:       rgba(60, 60, 67, 0.30);
-  --label-quaternary:     rgba(60, 60, 67, 0.18);
-
-  --fill-primary:         rgba(120, 120, 128, 0.20);
-  --fill-secondary:       rgba(120, 120, 128, 0.16);
-  --fill-tertiary:        rgba(118, 118, 128, 0.12);
-  --fill-quaternary:      rgba(116, 116, 128, 0.08);
-
-  --bg-primary:           #FFFFFF;
-  --bg-secondary:         #F2F2F7;
-  --bg-tertiary:          #FFFFFF;
-  --bg-grouped-primary:   #F2F2F7;
-  --bg-grouped-secondary: #FFFFFF;
-  --bg-grouped-tertiary:  #F2F2F7;
-
-  --separator:            rgba(60, 60, 67, 0.29);
-  --separator-opaque:     #C6C6C8;
+  --bg-tertiary: #FFFFFF;
 
   /* Liquid Glass tokens */
-  --glass-blur-regular:      saturate(180%) blur(20px);
-  --glass-blur-thick:        saturate(180%) blur(40px);
-  --glass-blur-thin:         saturate(180%) blur(10px);
+  --glass-blur-regular: saturate(180%) blur(20px);
+  --glass-blur-thick:   saturate(180%) blur(40px);
 
-  --glass-fill-regular:      rgba(255, 255, 255, 0.55);
-  --glass-fill-clear:        rgba(255, 255, 255, 0.18);
-  --glass-fill-prominent:    rgba(255, 255, 255, 0.85);
+  --glass-fill-regular:   rgba(255, 255, 255, 0.55);
+  --glass-fill-clear:     rgba(255, 255, 255, 0.18);
+  --glass-fill-prominent: rgba(255, 255, 255, 0.85);
 
   --glass-edge:
     inset 0 1px 0 0 rgba(255, 255, 255, 0.65),
@@ -107,98 +56,47 @@
     inset 1px 0 0 0 rgba(255, 255, 255, 0.22),
     inset -1px 0 0 0 rgba(255, 255, 255, 0.22);
 
-  --glass-shadow-sm: 0 1px 2px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.08);
   --glass-shadow-md: 0 2px 6px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.12);
   --glass-shadow-lg: 0 4px 12px rgba(0,0,0,0.10), 0 16px 48px rgba(0,0,0,0.18);
 
   /* Radii */
-  --radius-xs:  6px;
-  --radius-sm:  10px;
-  --radius-md:  14px;
-  --radius-lg:  22px;
-  --radius-xl:  28px;
-  --radius-2xl: 38px;
+  --radius-sm:      10px;
+  --radius-md:      14px;
+  --radius-lg:      22px;
+  --radius-xl:      28px;
   --radius-capsule: 999px;
 
   /* Spacing — iOS 8pt grid */
-  --space-0:  0;
-  --space-1:  2px;
-  --space-2:  4px;
-  --space-3:  8px;
-  --space-4:  12px;
-  --space-5:  16px;
-  --space-6:  20px;
-  --space-7:  24px;
-  --space-8:  32px;
-  --space-9:  44px;
-  --space-10: 56px;
-  --space-11: 72px;
-
-  /* Elevation */
-  --shadow-1: 0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
-  --shadow-2: 0 2px 6px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-3: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06);
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 16px;
+  --space-6: 20px;
+  --space-7: 24px;
 
   /* Motion */
-  --ease-standard:  cubic-bezier(0.25, 0.1, 0.25, 1);
-  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-snappy:    cubic-bezier(0.4, 0.0, 0.2, 1);
-  --ease-decel:     cubic-bezier(0.0, 0.0, 0.2, 1);
-  --ease-accel:     cubic-bezier(0.4, 0.0, 1, 1);
+  --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-snappy:   cubic-bezier(0.4, 0.0, 0.2, 1);
 
-  --dur-fast:   120ms;
-  --dur-base:   240ms;
-  --dur-slow:   420ms;
-  --dur-morph:  600ms;
+  --dur-fast: 120ms;
+  --dur-base: 240ms;
 
-  /* Tap state tokens */
-  --press-scale:  0.96;
-  --hover-alpha:  0.92;
-  --press-alpha:  0.85;
+  /* Tap state */
+  --press-scale: 0.96;
 }
 
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --blue:    #0A84FF;
-    --green:   #30D158;
-    --indigo:  #5E5CE6;
-    --orange:  #FF9F0A;
-    --pink:    #FF375F;
-    --purple:  #BF5AF2;
-    --red:     #FF453A;
-    --teal:    #40C8E0;
-    --yellow:  #FFD60A;
-    --mint:    #66D4CF;
-    --cyan:    #64D2FF;
-    --brown:   #AC8E68;
+    --green:  #30D158;
+    --yellow: #FFD60A;
 
-    --gray:    #8E8E93;
-    --gray-2:  #636366;
-    --gray-3:  #48484A;
-    --gray-4:  #3A3A3C;
-    --gray-5:  #2C2C2E;
-    --gray-6:  #1C1C1E;
+    --label-primary:  rgba(255, 255, 255, 1);
+    --label-tertiary: rgba(235, 235, 245, 0.30);
 
-    --label-primary:    rgba(255, 255, 255, 1);
-    --label-secondary:  rgba(235, 235, 245, 0.60);
-    --label-tertiary:   rgba(235, 235, 245, 0.30);
-    --label-quaternary: rgba(235, 235, 245, 0.16);
-
-    --fill-primary:     rgba(120, 120, 128, 0.36);
-    --fill-secondary:   rgba(120, 120, 128, 0.32);
-    --fill-tertiary:    rgba(118, 118, 128, 0.24);
-    --fill-quaternary:  rgba(118, 118, 128, 0.18);
-
-    --bg-primary:           #000000;
-    --bg-secondary:         #1C1C1E;
-    --bg-tertiary:          #2C2C2E;
-    --bg-grouped-primary:   #000000;
-    --bg-grouped-secondary: #1C1C1E;
-    --bg-grouped-tertiary:  #2C2C2E;
-
-    --separator:        rgba(84, 84, 88, 0.65);
-    --separator-opaque: #38383A;
+    --bg-tertiary: #2C2C2E;
 
     --glass-fill-regular:   rgba(40, 40, 50, 0.55);
     --glass-fill-clear:     rgba(40, 40, 50, 0.22);
@@ -210,7 +108,6 @@
       inset 1px 0 0 0 rgba(255, 255, 255, 0.06),
       inset -1px 0 0 0 rgba(255, 255, 255, 0.06);
 
-    --glass-shadow-sm: 0 1px 2px rgba(0,0,0,0.30), 0 2px 8px rgba(0,0,0,0.35);
     --glass-shadow-md: 0 2px 6px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.45);
     --glass-shadow-lg: 0 4px 12px rgba(0,0,0,0.40), 0 16px 48px rgba(0,0,0,0.60);
   }
@@ -1369,9 +1266,6 @@ function applyLayout() {
     uiEl.style.bottom = 'calc(32px + env(safe-area-inset-bottom, 0px))';
   }
   // 'desktop' leaves bottom unset so the CSS fallback rule applies
-  // TEMP DEBUG
-  console.log('[applyLayout] mode=%s clientH=%d screen.h=%d viewportH-after=%d ui.bottom=%s',
-    mode, clientH, window.screen.height, viewportEl.clientHeight, uiEl.style.bottom);
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
@@ -1398,7 +1292,7 @@ setup();
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js');
+    navigator.serviceWorker.register('./sw.js');
   });
 }
 </script>
